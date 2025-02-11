@@ -113,7 +113,6 @@ function VideoForm({
   const [subtitlesFile, setsubtitlesFile] = useState<File | null>(null);
 
   function handleEnter(e: React.FormEvent<HTMLDivElement>) {
-    // Join room using API here...
     e.preventDefault();
 
     if (videoFile === null) {
@@ -149,7 +148,6 @@ function VideoForm({
                   accept="video/*"
                   className="file-input file-input-bordered w-full max-w-xs"
                   onChange={(e) => {
-                    console.log(e.target.files);
                     if (e.target.files && e.target.files[0]) {
                       setvideoFile(e.target.files[0]);
                     }
@@ -164,7 +162,7 @@ function VideoForm({
                 </label>
                 <input
                   type="file"
-                  accept=".srt,.vtt"
+                  accept=".vtt"
                   className="file-input file-input-bordered w-full max-w-xs"
                   onChange={(e) => {
                     if (e.target.files && e.target.files[0]) {
@@ -172,6 +170,12 @@ function VideoForm({
                     }
                   }}
                 />
+                <label className="label">
+                  <span></span>
+                  <span className="label-text-alt">
+                    Only .vtt files supported
+                  </span>
+                </label>
               </div>
               <div className="form-control mt-6">
                 <div className="btn btn-primary" onClick={handleEnter}>
@@ -199,26 +203,19 @@ function VideoPlayer({
 }) {
   return (
     <div className="hero min-h-screen">
-      <div className="hero-overlay bg-opacity-60"></div>
-      <div className="hero-content text-neutral-content text-center">
-        <div className="max-w-md">
-          <h1 className="mb-5 text-5xl font-bold">Hola!!</h1>
-          <p>
-            Welcome to{" "}
-            <span
-              className="text-red-400 font-semibold text-lg underline underline-offset-2 italic"
-              style={{ fontFamily: "'Brush Script MT', cursive" }}
-            >
-              Vibeo
-            </span>
-            .
-          </p>
-          <p className="mb-5 text-sm">
-            A simple video player with video time sync and more to come.
-          </p>
-          <div className="btn btn-primary">Get Started</div>
-        </div>
-      </div>
+      <video controls className="w-full max-w-4xl" crossOrigin="anonymous">
+        <source src={URL.createObjectURL(videoFile)} type={videoFile.type} />
+        {subtitlesFile && (
+          <track
+            src={URL.createObjectURL(subtitlesFile)}
+            kind="subtitles"
+            srcLang="en"
+            label="English"
+            default
+          />
+        )}
+        Your browser does not support the video tag.
+      </video>
     </div>
   );
 }
